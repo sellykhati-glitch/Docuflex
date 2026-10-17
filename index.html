@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FileConvert Pro - Free Online File Converter</title>
+    <!-- Tailwind CSS -->
+    <script src="https://tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com"></script>
+    <!-- JS libraries for real browser-side conversion -->
+    <script src="https://cloudflare.com"></script>
+    <script src="https://cloudflare.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { start: '#3b82f6', end: '#8b5cf6' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); }
+        .gradient-text { background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100 min-h-screen font-sans transition-colors duration-200">
+
+    <!-- NAVIGATION BAR -->
+    <nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-2">
+                    <div class="gradient-bg p-2 rounded-lg text-white">
+                        <i data-lucide="refresh-cw" class="w-6 h-6 animate-spin-slow"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight">FileConvert<span class="gradient-text">Pro</span></span>
+                </div>
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="#convert-section" class="hover:text-blue-500 font-medium transition">Convert Files</a>
+                    <a href="#features" class="hover:text-blue-500 font-medium transition">Features</a>
+                    <a href="#faq" class="hover:text-blue-500 font-medium transition">FAQ</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:ring-2 hover:ring-slate-300 dark:hover:ring-slate-700 transition">
+                        <i data-lucide="moon" class="w-5 h-5 hidden dark:block"></i>
+                        <i data-lucide="sun" class="w-5 h-5 block dark:hidden"></i>
+                    </button>
+                    <a href="#convert-section" class="gradient-bg text-white px-4 py-2 rounded-lg font-medium shadow-md hover:opacity-90 transition">Start Free</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO & UPLOAD SECTION -->
+    <section id="convert-section" class="max-w-5xl mx-auto px-4 py-12 md:py-20 text-center">
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
+            Convert Any File, <span class="gradient-text">Anytime.</span>
+        </h1>
+        <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8">
+            Convert documents, PDFs, and images into your preferred format securely in seconds. 100% private, local browser processing.
+        </p>
+
+        <!-- Tool Search -->
+        <div class="max-w-md mx-auto mb-8 relative">
+            <i data-lucide="search" class="absolute left-3 top-3.5 text-slate-400 w-5 h-5"></i>
+            <input type="text" id="tool-search" placeholder="Search conversion tools (e.g., PDF, PNG)..." class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-sm">
+        </div>
+
+        <!-- Dynamic Drag & Drop Core Container -->
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-xl border border-slate-100 dark:border-slate-800 max-w-3xl mx-auto">
+            <div id="drop-zone" class="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-10 hover:border-blue-500 dark:hover:border-blue-500 transition cursor-pointer bg-slate-50 dark:bg-slate-900/50 group">
+                <input type="file" id="file-input" class="hidden" multiple>
+                <div class="flex flex-col items-center gap-4">
+                    <div class="p-4 bg-white dark:bg-slate-800 rounded-full shadow-md group-hover:scale-110 transition duration-200">
+                        <i data-lucide="upload-cloud" class="w-10 h-10 text-blue-500"></i>
+                    </div>
+                    <div>
+                        <p class="text-lg font-semibold">Drag & drop files here or <span class="text-blue-500">browse</span></p>
+                        <p class="text-sm text-slate-400 mt-1">Supports TXT, Images (PNG, JPG, WEBP) & PDFs up to 50MB</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Files List Working Management Grid -->
+            <div id="file-queue" class="mt-6 space-y-3 hidden text-left">
+                <h3 class="font-bold text-sm tracking-wide uppercase text-slate-400">Selected Files</h3>
+                <!-- Dynamic Content Injects Here -->
+            </div>
+
+            <!-- Global Action Flow Panel -->
+            <div id="action-panel" class="mt-6 pt-6 border-t border-slate-100 dark:border-slate-700 hidden flex flex-wrap gap-4 items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <label class="text-sm font-medium">Convert all to:</label>
+                    <select id="global-target" class="bg-slate-100 dark:bg-slate-900 border-none rounded-lg px-3 py-1.5 font-medium text-sm focus:ring-2 focus:ring-blue-500">
+                        <option value="pdf">PDF (.pdf)</option>
+                        <option value="png">PNG (.png)</option>
+                        <option value="jpg">JPG (.jpeg)</option>
+                        <option value="txt">TXT (.txt)</option>
+                    </select>
+                </div>
+                <div class="flex gap-2 w-full sm:w-auto">
+                    <button id="convert-btn" class="w-full sm:w-auto gradient-bg text-white px-6 py-2.5 rounded-xl font-semibold shadow-md hover:opacity-90 transition flex items-center justify-center gap-2">
+                        <i data-lucide="play" class="w-4 h-4"></i> Convert Files
+                    </button>
+                    <button id="download-all-btn" class="w-full sm:w-auto bg-emerald-500 text-white px-6 py-2.5 rounded-xl font-semibold shadow-md hover:bg-emerald-600 transition flex items-center justify-center gap-2 hidden">
+                        <i data-lucide="download-cloud" class="w-4 h-4"></i> Download All (.ZIP)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Interactive Activity Track -->
+        <div id="recent-box" class="max-w-3xl mx-auto mt-6 text-left hidden">
+            <div class="flex items-center gap-2 text-slate-400 text-sm mb-2">
+                <i data-lucide="history" class="w-4 h-4"></i>
+                <span>Session History Log</span>
+            </div>
+            <div id="recent-list" class="bg-white/50 dark:bg-slate-800/50 rounded-xl p-3 text-xs space-y-1"></div>
+        </div>
+    </section>
+
+    <!-- POPULAR QUICK CONVERSIONS CONTEXT -->
+    <section class="max-w-7xl mx-auto px-4 py-12 border-t border-slate-200 dark:border-slate-800">
+        <h2 class="text-2xl font-bold mb-6 text-center md:text-left">Popular Conversion Workflows</h2>
+        <div id="conversion-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div onclick="triggerShortcut('txt', 'pdf')" class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex items-center justify-between hover:shadow-md hover:border-blue-400 cursor-pointer transition group">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-amber-100 dark:bg-amber-950/30 text-amber-600 rounded-xl font-bold text-xs">TXT</div>
+                    <i data-lucide="arrow-right" class="w-4 h-4 text-slate-300 group-hover:text-blue-500 transition"></i>
+                    <div class="p-3 bg-red-100 dark:bg-red-950/30 text-red-600 rounded-xl font-bold text-xs">PDF</div>
+                </div>
+                <span class="text-sm font-semibold text-blue-500">Launch</span>
+            </div>
+            <div onclick="triggerShortcut('png', 'jpg')" class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex items-center justify-between hover:shadow-md hover:border-blue-400 cursor-pointer transition group">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-blue-100 dark:bg-blue-950/30 text-blue-600 rounded-xl font-bold text-xs">PNG</div>
+                    <i data-lucide="arrow-right" class="w-4 h-4 text-slate-300 group-hover:text-blue-500 transition"></i>
+                    <div class="p-3 bg-emerald-100 dark:bg-emerald-950/30 text-emerald-600 rounded-xl font-bold text-xs">JPG</div>
+                </div>
+                <span class="text-sm font-semibold text-blue-500">Launch</span>
+            </div>
+            <div onclick="triggerShortcut('pdf', 'txt')" class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex items-center justify-between hover:shadow-md hover:border-blue-400 cursor-pointer transition group">
+                <div class="flex items-center gap-4">
